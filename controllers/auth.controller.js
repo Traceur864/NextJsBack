@@ -26,7 +26,7 @@ const SECRET_KEY = "mi_clave_secreta";
 // 🔹 Login de usuario
 exports.login = [upload.none(), (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
+  //console.log(req.body);
   
 
   db.query("SELECT * FROM usuarios WHERE email = ?", [email], async (err, results) => {

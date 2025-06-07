@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 // Obtener los productos del carrito de un usuario
 exports.obtenerCarrito = (req, res) => {
   const { usuario_id } = req.params;
-  console.log("Usuario ID recibido:", usuario_id);
+  //console.log("Usuario ID recibido:", usuario_id);
   const query = `
     SELECT c.id, p.nombre, p.precio, c.cantidad, p.imagen 
     FROM carrito c
@@ -32,7 +32,7 @@ exports.obtenerCarrito = (req, res) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    console.log("Resultados de la consulta:", results);
+    //console.log("Resultados de la consulta:", results);
     res.json(results);
   });
 };
@@ -41,7 +41,7 @@ exports.obtenerCarrito = (req, res) => {
 exports.agregarAlCarrito = [upload.none(), async (req, res) => {
   let { usuario_id, producto_id, cantidad } = req.body;
 
-  console.log("Datos recibidos:", req.body);
+  //console.log("Datos recibidos:", req.body);
 
   if (!usuario_id || !producto_id || !cantidad) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
@@ -74,7 +74,7 @@ exports.agregarAlCarrito = [upload.none(), async (req, res) => {
           (err, result) => {
             if (err) return res.status(500).json({ error: err.message });
 
-            console.log("Producto agregado con ID:", result.insertId);
+            //console.log("Producto agregado con ID:", result.insertId);
             res.json({ mensaje: "Producto agregado al carrito" });
           }
         );
