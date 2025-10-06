@@ -1,100 +1,81 @@
 CREATE DATABASE E_COMMERCE;
 USE E_COMMERCE;
-#DROP DATABASE E_COMMERCE;
 
-CREATE TABLE USERS (
-    ID_USER INT AUTO_INCREMENT PRIMARY KEY,
-    USERNAME TEXT,
-    NAME TEXT NOT NULL,
-    LASTNAME TEXT NOT NULL,
-    ADDRESS TEXT NOT NULL,
-    PHONE TEXT NOT NULL,
-    EMAIL TEXT NOT NULL,
-    PASSWORD TEXT NOT NULL,
-    ROL TEXT NOT NULL,
-    PICTURE TEXT,
-    STATUS TEXT NOT NULL
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
 );
-#DROP TABLE USERS;
+#DROP TABLE usuarios;
 
-CREATE TABLE PRODUCTS (
-    ID_PRODUCT INT AUTO_INCREMENT PRIMARY KEY,
-    NAME TEXT NOT NULL,
-    DESCRIPTION TEXT,
-    PRICE FLOAT NOT NULL,
-    PICTURE TEXT
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL,
+    imagen VARCHAR(255)
 );
-#DROP TABLE PRODUCTS;
+#DROP TABLE productos;
 
-CREATE TABLE SEND_ADDRESS (
-    ID_ADDRESS INT AUTO_INCREMENT PRIMARY KEY,
-    ID_USER INT,
-    NAME TEXT NOT NULL,
-    EMAIL TEXT NOT NULL,
-    PHONE TEXT NOT NULL,
-    ADDRESS TEXT NOT NULL,
-    FOREIGN KEY (ID_USER) REFERENCES USERS(ID_USER)
+CREATE TABLE direcciones_envio (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,
+    nombre VARCHAR(255) NOT NULL,
+    correo VARCHAR(255) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    direccion TEXT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
-#DROP TABLE SEND_ADDRESS;
+#DROP TABLE direcciones_envio;
 
-CREATE TABLE CAR (
-    ID_CAR INT AUTO_INCREMENT PRIMARY KEY,
-    ID_USER INT,
-    ID_PRODUCT INT,
-    QUANTITY INT,
-    FOREIGN KEY (ID_USER) REFERENCES USERS(ID_USER),
-    FOREIGN KEY (ID_PRODUCT) REFERENCES PRODUCTS(ID_PRODUCT)
+CREATE TABLE carrito (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,
+    producto_id INT,
+    cantidad INT DEFAULT 1,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
-#DROP TABLE CAR;
+#DROP TABLE carrito;
 
-CREATE TABLE ORDERS (
-    ID_ORDER INT AUTO_INCREMENT PRIMARY KEY,
-    ID_USER INT,
-    TOTAL FLOAT,
-    DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ID_USER) REFERENCES USERS(ID)
+CREATE TABLE pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,
+    total DECIMAL(10,2),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
-#DROP TABLE ORDERS;
+#DROP TABLE pedidos;
 
-CREATE TABLE ORDER_DETAIL (
-    ID_DETAIL INT AUTO_INCREMENT PRIMARY KEY,
-    ID_ORDER INT,
-    ID_PRODUCT INT,
-    QUANTITY INT NOT NULL,
-    PRICE FLOAT NOT NULL,
-    SUBTOTAL FLOAT NOT NULL,
-    FOREIGN KEY (ID_ORDER) REFERENCES ORDERS(ID_ORDER),
-    FOREIGN KEY (ID_PRODUCT) REFERENCES PRODUCTS(ID_PRODUCT)
+CREATE TABLE pedido_detalle (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT,
+    producto_id INT,
+    cantidad INT NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
-#DROP TABLE ORDER_DETAIL;
+#DROP TABLE pedido_detalle;
 
+INSERT INTO usuarios (nombre, email, password) VALUES
+('Juan Pérez', 'juan@correo.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS'),
+('María López', 'maria@correo.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS'),
+('Carlos Gómez', 'carlos@correo.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS'),
+('Edwin Lopez', 'edwin@correo.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS');
 
-    NAME TEXT NOT NULL,
-    LASTNAME TEXT NOT NULL,
-    ADDRESS TEXT NOT NULL,
-    PHONE TEXT NOT NULL,
-    EMAIL TEXT NOT NULL,
-    PASSWORD TEXT NOT NULL,
-    ROL TEXT NOT NULL,
-    PICTURE TEXT,
-    STATUS TEXT NOT NULL
-
-INSERT INTO USERS (USERNAME, NAME, LASTNAME, ADDRESS, PHONE, EMAIL, PASSWORD, ROL, PICTURE, STATUS) VALUES
-('Juanin','Juan', 'Pérez', 'Calle #2', '3312233445', 'juan@gmail.com.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS', 'User', NULL, 'ACTIVE'),
-('Maria','María', 'López', 'Calle #2', '3312233445', 'maria@gmail.com.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS', 'User', NULL, 'ACTIVE'),
-('Carlos','Carlos', 'Gómez', 'Calle #2', '3312233445', 'carlos@gmail.com.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS', 'User', NULL, 'ACTIVE'),
-('Edwin','Edwin', 'Lopez', 'Calle #2', '3312233445', 'edwin@gmail.com.com', '$2b$10$B5gptUy41R3sw29AQlb7C.fr5C5SX9ol6va2FYuEx0keiv019/xDS', 'Administrador', NULL, 'ACTIVE');
-
--- INSERT INTO productos (nombre, descripcion, precio, imagen) VALUES
--- ('Laptop Gamer', 'Laptop potente con procesador i7 y tarjeta gráfica RTX 3060.', 1500.00, 'laptop.jpg'),
--- ('Teléfono Inteligente', 'Smartphone de última generación con cámara de 108MP.', 800.00, 'telefono.jpg'),
--- ('Auriculares Inalámbricos', 'Auriculares con cancelación de ruido y alta fidelidad de sonido.', 120.00, 'auriculares.jpg'),
--- ('Monitor 4K', 'Monitor UHD 4K de 27 pulgadas con tecnología IPS.', 350.00, 'monitor.jpg'),
--- ('Teclado Mecánico', 'Teclado mecánico RGB con switches personalizables.', 90.00, 'teclado.jpg'),
--- ('Mouse Gamer', 'Mouse ergonómico con sensor óptico de alta precisión.', 60.00, 'mouse.jpg'),
--- ('Silla Ergonómica', 'Silla de oficina ergonómica con soporte lumbar ajustable.', 250.00, 'silla.jpg'),
--- ('Tablet Android', 'Tablet con pantalla de 10 pulgadas y batería de larga duración.', 400.00, 'tablet.jpg'),
--- ('Smartwatch', 'Reloj inteligente con monitoreo de salud y GPS integrado.', 200.00, 'smartwatch.jpg'),
--- ('Cámara Profesional', 'Cámara réflex digital con lente de 24MP y grabación en 4K.', 1200.00, 'camara.jpg');
+INSERT INTO productos (nombre, descripcion, precio, imagen) VALUES
+('Laptop Gamer', 'Laptop potente con procesador i7 y tarjeta gráfica RTX 3060.', 1500.00, 'laptop.jpg'),
+('Teléfono Inteligente', 'Smartphone de última generación con cámara de 108MP.', 800.00, 'telefono.jpg'),
+('Auriculares Inalámbricos', 'Auriculares con cancelación de ruido y alta fidelidad de sonido.', 120.00, 'auriculares.jpg'),
+('Monitor 4K', 'Monitor UHD 4K de 27 pulgadas con tecnología IPS.', 350.00, 'monitor.jpg'),
+('Teclado Mecánico', 'Teclado mecánico RGB con switches personalizables.', 90.00, 'teclado.jpg'),
+('Mouse Gamer', 'Mouse ergonómico con sensor óptico de alta precisión.', 60.00, 'mouse.jpg'),
+('Silla Ergonómica', 'Silla de oficina ergonómica con soporte lumbar ajustable.', 250.00, 'silla.jpg'),
+('Tablet Android', 'Tablet con pantalla de 10 pulgadas y batería de larga duración.', 400.00, 'tablet.jpg'),
+('Smartwatch', 'Reloj inteligente con monitoreo de salud y GPS integrado.', 200.00, 'smartwatch.jpg'),
+('Cámara Profesional', 'Cámara réflex digital con lente de 24MP y grabación en 4K.', 1200.00, 'camara.jpg');
 
 #DROP DATABASE E_COMMERCE;

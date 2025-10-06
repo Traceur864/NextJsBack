@@ -58,18 +58,3 @@ exports.register = [upload.none(), async (req, res) => {
     }
   );
 }];
-
-exports.update = [upload.none(), async (req, res) => {
-  const { id, nombre, email, password } = req.body;
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  db.query(
-    "UPDATE usuarios SET nombre = ?, email = ?, password = ? WHERE id = ?",
-    [nombre, email, hashedPassword, id],
-    (err, result) => {
-      if (err) return res.status(500).json({ error: "Error en el servidor" });
-      res.json({ mensaje: "Datos actualizados exitosamente" });
-    }
-  );
-}];
