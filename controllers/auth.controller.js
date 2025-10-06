@@ -6,27 +6,25 @@ const multer = require('multer')
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       const uploadPath = path.join(__dirname, '../uploads');
-      // Verificar si la carpeta existe, si no, crearla
+      
       if (!fs.existsSync(uploadPath)) {
         fs.mkdirSync(uploadPath);
       }
-      cb(null, uploadPath); // Carpeta donde se almacenarán las imágenes
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
       
-      cb(null, Date.now() + file.originalname); // Añadir la extensión original
+      cb(null, Date.now() + file.originalname);
     }
   });
   
   const upload = multer({ storage: storage });
 
-// Clave secreta para firmar el token
 const SECRET_KEY = "mi_clave_secreta";
 
-// 🔹 Login de usuario
+
 exports.login = [upload.none(), (req, res) => {
   const { email, password } = req.body;
-  //console.log(req.body);
   
 
   db.query("SELECT * FROM usuarios WHERE email = ?", [email], async (err, results) => {
@@ -45,7 +43,6 @@ exports.login = [upload.none(), (req, res) => {
   });
 }];
 
-// 🔹 Registro de usuario (Opcional)
 exports.register = [upload.none(), async (req, res) => {
   const { nombre, email, password } = req.body;
 
